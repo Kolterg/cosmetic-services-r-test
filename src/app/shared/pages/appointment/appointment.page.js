@@ -31,6 +31,7 @@ export default function AppointmentPage() {
 
     let mondayHours = setTimes(8, 16);
 
+    //Returns the date by exceeding the specified number of days    //Повертає дату збільшену на задану кількість днів
     const getDate = (x) => {
         let date = new Date();
         let m = date.getMonth();
@@ -52,6 +53,7 @@ export default function AppointmentPage() {
         return {y, m, d};
     }
 
+    //Returns the date with a string over the specified number of days      //Повертає дату стрічкою збільшену на задану кількість днів
     const getStrDate = (x) => {
         let {y, m, d} = getDate(x);
         let months = ['Січня', 'Лютого', 'Березня', 'Квітня', 'Травня', 'Червня', 'Липня', 'Серпня', 'Вересня', 'Жовтня', 'Листопада', 'Грудня'];
@@ -115,6 +117,7 @@ export default function AppointmentPage() {
     //     return strWeekDay + " " + day + " " + month;
     // }
 
+    //Повертає масив годин за заданим відрізком
     function setTimes(hStart, hEnd) {
         let times = ["0:00", "1:00", "2:00", "3:00", "4:00", "5:00", "6:00", "7:00", "8:00", "9:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00"];
         // let times = ["8:00", "8:30", "9:00", "9:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30"];
@@ -129,10 +132,10 @@ export default function AppointmentPage() {
 
     let [recordingTime, setRecordingTime] = useState("Ще не задано");
 
-    const setTime = (time, {y, m, d}) => {
-        setRecordingTime(time + " D: " + d + " M: " + (m + 1) + " Y: " + y);
-    }
+    //Повертає стрічку з часу та дати які отримує
+    const setTime = (time, {y, m, d}) => setRecordingTime(time + " D: " + d + " M: " + (m + 1) + " Y: " + y)
 
+    //Holds the button after activation     //ЗАтискає задану кнопку
     const activeBut = (id) => {
         const currentBut = document.getElementById(id);
         if (currentBut) {
@@ -144,6 +147,7 @@ export default function AppointmentPage() {
         }
     }
 
+    //UnHolds the button after activation       //Відтискає минулу кнопку при активації нової
     const unActiveBut = (butActive) => {
         if (butActive) {
             butActive.classList.remove('hover');
@@ -182,6 +186,7 @@ export default function AppointmentPage() {
 
     const timout = 800;
 
+    //Opens a modal window      //Відкриває модальне вікно та запитує закриття відкритих
     function popupOpen(id) {
         const currentPopup = document.getElementById(id);
         if (currentPopup && unlock) {
@@ -200,11 +205,13 @@ export default function AppointmentPage() {
         }
     }
 
+    //Closes the modal window for ID        //ЗАкриває модальне вікно за ID
     function popupCloseOne(id) {
         const currentPopup = document.getElementById(id);
         popupClose(currentPopup);
     }
 
+    //Closes the modal window for the element       //Закриває модальне вікно по елементу
     function popupClose(popupActive, doUnlock = true) {
         if (unlock) {
             popupActive.classList.remove('open');
@@ -214,6 +221,7 @@ export default function AppointmentPage() {
         }
     }
 
+    //Locks the page when a modal window is open        //Блокує сторінку при відкритті модального вікна
     function bodyLock() {
         const lockPaddingValue = window.innerWidth - document.querySelector('.wrapper').offsetWidth + 'px';
 
@@ -232,6 +240,7 @@ export default function AppointmentPage() {
         }, timout);
     }
 
+    //Unlocks the page when the modal window is closed
     function bodyUnLock() {
         setTimeout(function () {
             if (lockPadding.length > 0) {
@@ -250,6 +259,7 @@ export default function AppointmentPage() {
         }, timout);
     }
 
+    //Closes the modal window with escape       //Закриває модальне вікно за ESC-ейпом
     document.addEventListener('keydown', function ({which}) {
         if (which === 27) {
             const popupActive = document.querySelector('.popup.open');
