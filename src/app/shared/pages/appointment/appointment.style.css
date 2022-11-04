@@ -88,7 +88,6 @@ button {
 .client_data {
     display: flex;
     justify-content: space-around;
-    margin: 32px 0;
     width: 100%;
     background-color: aliceblue;
 }

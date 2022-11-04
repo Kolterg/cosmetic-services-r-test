@@ -3,33 +3,17 @@ import RecordingHoursComponent from "./component/recording-hours.component";
 import {useState} from "react";
 
 
-// let RecordDays = function () {
-//     this.DaysOfWeek = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Нд'];
-//     this.Months = ['Січень', 'Лютий', 'Березень', 'Квітень', 'Травень', 'Червень', 'Липень', 'Серпень', 'Вересень', 'Жовтень', 'Листопад', 'Грудень'];
-//     let d = new Date();
-//     this.currMonth = d.getMonth();
-//     this.currYear = d.getFullYear();
-//     this.currDay = d.getDate();
-// }
-//
-// RecordDays.prototype.getDate = function (x) {
-//     let lastDateOfMonth = new Date(this.currYear, this.currMonth + 1, 0).getDate()
-//     // let lastDayOfLastMonth = this.currMonth === 0 ? new Date(this.currYear-1, 11, 0).getDate() : new Date(this.currYear, this.currMonth, 0).getDate();
-//     this.currDay += x;
-//     this.month = this.Months[this.currMonth];
-//
-//     if (this.currDay > lastDateOfMonth) {
-//         this.currDay = 0 + x;
-//         this.currMonth = this.Months[this.currMonth + 1];
-//     }
-//
-//     return this.currDay + " " + this.currMonth;
-// }
-
-
 export default function AppointmentPage() {
 
-    let mondayHours = setTimes(8, 16);
+    const FIRST_DAY_CONST = 0;
+    const SECOND_DAY_CONST = 1;
+    const THIRD_DAY_CONST = 2;
+    const FOURTH_DAY_CONST = 3;
+    const FIFTH_DAY_CONST = 4;
+    const SIXTH_DAY_CONST = 5;
+    const SEVENTH_DAY_CONST = 6;
+
+    const mondayHours = setTimes(8, 16);
 
     //Returns the date by exceeding the specified number of days    //Повертає дату збільшену на задану кількість днів
     const getDate = (x) => {
@@ -38,6 +22,7 @@ export default function AppointmentPage() {
         let d = date.getDate();
         let y = date.getFullYear();
         let lastDateOfMonth = new Date(y, m + 1, 0).getDate()
+        // let lastDayOfLastMonth = this.currMonth === 0 ? new Date(this.currYear-1, 11, 0).getDate() : new Date(this.currYear, this.currMonth, 0).getDate();
 
         if (d + x > lastDateOfMonth) {
             d = x - (lastDateOfMonth - d);
@@ -77,46 +62,6 @@ export default function AppointmentPage() {
         return strWeekDay + "\n " + d + "\n " + month;
     }
 
-    // const getDate = (x) => {
-    //     let d = new Date();
-    //     let months = ['Січня', 'Лютого', 'Березня', 'Квітня', 'Травня', 'Червня', 'Липня', 'Серпня', 'Вересня', 'Жовтня', 'Листопада', 'Грудня'];
-    //     let DaysOfWeek = ['Нд', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'];
-    //     let m = d.getMonth();
-    //     let day = d.getDate();
-    //     let y = d.getFullYear();
-    //     let dayOfWeek = d.getDay();
-    //     let lastDateOfMonth = new Date(y, m + 1, 0).getDate();
-    //     let month = months[m];
-    //
-    //     if (day + x > lastDateOfMonth) {
-    //         day = x - (lastDateOfMonth - day);
-    //         m += 1;
-    //
-    //         if (m > 11) {
-    //             m = 0;
-    //         }
-    //         month = months[m];
-    //     } else {
-    //         day += x;
-    //     }
-    //
-    //     let weekDay = new Date(y, m, day).getDay();
-    //     let strWeekDay;
-    //
-    //     switch (dayOfWeek) {
-    //         case weekDay:
-    //             strWeekDay = "Сьогодні";
-    //             break;
-    //         case weekDay - 1:
-    //             strWeekDay = "Завтра";
-    //             break;
-    //         default:
-    //             strWeekDay = DaysOfWeek[weekDay];
-    //     }
-    //
-    //     return strWeekDay + " " + day + " " + month;
-    // }
-
     //Повертає масив годин за заданим відрізком
     function setTimes(hStart, hEnd) {
         let times = ["0:00", "1:00", "2:00", "3:00", "4:00", "5:00", "6:00", "7:00", "8:00", "9:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00"];
@@ -135,7 +80,7 @@ export default function AppointmentPage() {
     //Повертає стрічку з часу та дати які отримує
     const setTime = (time, {y, m, d}) => setRecordingTime(time + " D: " + d + " M: " + (m + 1) + " Y: " + y)
 
-    //Holds the button after activation     //ЗАтискає задану кнопку
+    //Holds the button after activation     //Затискає задану кнопку та запитує відтискання затиснутої раніше кнопки
     const activeBut = (id) => {
         const currentBut = document.getElementById(id);
         if (currentBut) {
@@ -147,17 +92,34 @@ export default function AppointmentPage() {
         }
     }
 
-    //UnHolds the button after activation       //Відтискає минулу кнопку при активації нової
+
+    //===============================================================================================================
+
+    let [name, setName] = useState({value: ''});
+
+    function handleChange(event) {
+        setName({value: event.target.value});
+    }
+
+    function handleSubmit(event) {
+        alert('A name was submitted: ' + name.value);
+        event.preventDefault();
+    }
+
+    //===============================================================================================================
+
+
+    //UnHolds the button after activation       //Відпускає задану кнопку
     const unActiveBut = (butActive) => {
         if (butActive) {
             butActive.classList.remove('hover');
         }
     }
 
-    let [lastName, setLastName] = useState("Ще не задано");
-    let [firstName, setFirstName] = useState("Ще не задано");
-    let [middleName, setMiddleName] = useState("Ще не задано");
-    let [phoneNumber, setPhoneNumber] = useState("Ще не задано");
+    let [lastName, setLastName] = useState("");
+    let [firstName, setFirstName] = useState("");
+    let [middleName, setMiddleName] = useState("");
+    let [phoneNumber, setPhoneNumber] = useState("");
 
     const lastNameEl = document.getElementById('last_name');
     const firstNameEl = document.getElementById('first_name');
@@ -184,7 +146,7 @@ export default function AppointmentPage() {
 
     let unlock = true;
 
-    const timout = 800;
+    const timout = 800;     //Час блокування під час анімації відкриття модального вікна. Має співпадати з часом анімації!!!
 
     //Opens a modal window      //Відкриває модальне вікно та запитує закриття відкритих
     function popupOpen(id) {
@@ -205,7 +167,7 @@ export default function AppointmentPage() {
         }
     }
 
-    //Closes the modal window for ID        //ЗАкриває модальне вікно за ID
+    //Closes the modal window for ID        //Закриває модальне вікно за ID
     function popupCloseOne(id) {
         const currentPopup = document.getElementById(id);
         popupClose(currentPopup);
@@ -240,7 +202,7 @@ export default function AppointmentPage() {
         }, timout);
     }
 
-    //Unlocks the page when the modal window is closed
+    //Unlocks the page when the modal window is closed      //Розблоковує сторінку коли модальне вікно закривається.
     function bodyUnLock() {
         setTimeout(function () {
             if (lockPadding.length > 0) {
@@ -278,7 +240,7 @@ export default function AppointmentPage() {
                 <div className={'recording_days'}>
                     <div className={"appoint_days"}>
                         <div className={"appointDay1 appointDay"}>
-                            <div className={"appointDayHead"}>{getStrDate(0)} </div>
+                            <div className={"appointDayHead"}>{getStrDate(FIRST_DAY_CONST)} </div>
                             {
                                 mondayHours.map((value, index) =>
                                     <RecordingHoursComponent
@@ -286,14 +248,14 @@ export default function AppointmentPage() {
                                         index={'1_' + index}
                                         value={value}
                                         setTime={setTime}
-                                        day={0}
+                                        day={FIRST_DAY_CONST}
                                         date={getDate}
                                         activeBut={activeBut}
                                     />)
                             }
                         </div>
                         <div className={"appointDay2 appointDay"}>
-                            <div className={"appointDayHead"}>{getStrDate(1)} </div>
+                            <div className={"appointDayHead"}>{getStrDate(SECOND_DAY_CONST)} </div>
                             {
                                 mondayHours.map((value, index) =>
                                     <RecordingHoursComponent
@@ -301,14 +263,14 @@ export default function AppointmentPage() {
                                         index={'2_' + index}
                                         value={value}
                                         setTime={setTime}
-                                        day={1}
+                                        day={SECOND_DAY_CONST}
                                         date={getDate}
                                         activeBut={activeBut}
                                     />)
                             }
                         </div>
                         <div className={"appointDay3 appointDay"}>
-                            <div className={"appointDayHead"}> {getStrDate(2)} </div>
+                            <div className={"appointDayHead"}> {getStrDate(THIRD_DAY_CONST)} </div>
                             {
                                 mondayHours.map((value, index) =>
                                     <RecordingHoursComponent
@@ -316,14 +278,14 @@ export default function AppointmentPage() {
                                         index={'3_' + index}
                                         value={value}
                                         setTime={setTime}
-                                        day={2}
+                                        day={THIRD_DAY_CONST}
                                         date={getDate}
                                         activeBut={activeBut}
                                     />)
                             }
                         </div>
                         <div className={"appointDay4 appointDay"}>
-                            <div className={"appointDayHead"}> {getStrDate(3)} </div>
+                            <div className={"appointDayHead"}> {getStrDate(FOURTH_DAY_CONST)} </div>
                             {
                                 mondayHours.map((value, index) =>
                                     <RecordingHoursComponent
@@ -331,14 +293,14 @@ export default function AppointmentPage() {
                                         index={'4_' + index}
                                         value={value}
                                         setTime={setTime}
-                                        day={3}
+                                        day={FOURTH_DAY_CONST}
                                         date={getDate}
                                         activeBut={activeBut}
                                     />)
                             }
                         </div>
                         <div className={"appointDay5 appointDay"}>
-                            <div className={"appointDayHead"}> {getStrDate(4)} </div>
+                            <div className={"appointDayHead"}> {getStrDate(FIFTH_DAY_CONST)} </div>
                             {
                                 mondayHours.map((value, index) =>
                                     <RecordingHoursComponent
@@ -346,14 +308,14 @@ export default function AppointmentPage() {
                                         index={'5_' + index}
                                         value={value}
                                         setTime={setTime}
-                                        day={4}
+                                        day={FIFTH_DAY_CONST}
                                         date={getDate}
                                         activeBut={activeBut}
                                     />)
                             }
                         </div>
                         <div className={"appointDay6 appointDay"}>
-                            <div className={"appointDayHead"}> {getStrDate(5)} </div>
+                            <div className={"appointDayHead"}> {getStrDate(SIXTH_DAY_CONST)} </div>
                             {
                                 mondayHours.map((value, index) =>
                                     <RecordingHoursComponent
@@ -361,14 +323,14 @@ export default function AppointmentPage() {
                                         index={'6_' + index}
                                         value={value}
                                         setTime={setTime}
-                                        day={5}
+                                        day={SIXTH_DAY_CONST}
                                         date={getDate}
                                         activeBut={activeBut}
                                     />)
                             }
                         </div>
                         <div className={"appointDay7 appointDay"}>
-                            <div className={"appointDayHead"}> {getStrDate(6)} </div>
+                            <div className={"appointDayHead"}> {getStrDate(SEVENTH_DAY_CONST)} </div>
                             {
                                 mondayHours.map((value, index) =>
                                     <RecordingHoursComponent
@@ -376,7 +338,7 @@ export default function AppointmentPage() {
                                         index={'7_' + index}
                                         value={value}
                                         setTime={setTime}
-                                        day={6}
+                                        day={SEVENTH_DAY_CONST}
                                         date={getDate}
                                         activeBut={activeBut}
                                     />)
@@ -385,20 +347,30 @@ export default function AppointmentPage() {
                     </div>
                 </div>
                 <div className={'client_data'}>
-                    <form>
-                        <label htmlFor="{'last_name'}">Прізвище</label>
-                        <input type="text" id={'last_name'} className={'data'}/>
-                        {/*<span className="validity"></span>*/}
-                        <label htmlFor="{'first_name'}">Ім'я</label>
-                        <input type="text" id={'first_name'} className={'data'}/>
-                        {/*<span className="validity"></span>*/}
-                        <label htmlFor="{'middle_name'}">По батькові</label>
-                        <input type="text" id={'middle_name'} className={'data'}/>
-                        {/*<span className="validity"></span>*/}
-                        <label htmlFor="{'phone_number'}">Номер телефону</label>
-                        <input type="text" id={'phone_number'} className={'data'}/>
-                        {/*<span className="validity"></span>*/}
+
+                    <form onSubmit={handleSubmit}>
+                        <label>
+                            Name:
+                            <input type="text" value={name.value} onChange={handleChange} />
+                        </label>
+                        <input type="submit" value="Submit" />
                     </form>
+
+                    {/*<form name={'user_data'} action={popupOpen('popup')} autoComplete={'on'}>*/}
+                    {/*    <label htmlFor="{'last_name'}">Прізвище</label>*/}
+                    {/*    <input type="text" id={'last_name'} className={'data'}/>*/}
+                    {/*    /!*<span className="validity"></span>*!/*/}
+                    {/*    <label htmlFor="{'first_name'}">Ім'я</label>*/}
+                    {/*    <input type="text" id={'first_name'} className={'data'}/>*/}
+                    {/*    /!*<span className="validity"></span>*!/*/}
+                    {/*    <label htmlFor="{'middle_name'}">По батькові</label>*/}
+                    {/*    <input type="text" id={'middle_name'} className={'data'}/>*/}
+                    {/*    /!*<span className="validity"></span>*!/*/}
+                    {/*    <label htmlFor="{'phone_number'}">Номер телефону</label>*/}
+                    {/*    <input type="text" id={'phone_number'} className={'data'}/>*/}
+                    {/*    /!*<span className="validity"></span>*!/*/}
+                    {/*    <input type="submit" value={'Submit'}/>*/}
+                    {/*</form>*/}
                 </div>
                 <button id={'recordBut'} onClick={() => {
                     popupOpen('popup')
